@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdlib>
 #include <cstdint>
 #include <algorithm>
 #include <vector>
@@ -7,7 +8,7 @@ const int8_t CUBE_BLACK = -1;
 const int8_t CUBE_MIDDLE = 0;
 const int8_t CUBE_WHITE = 1;
 const int8_t TURN_WHITE = 1;
-const int8_t TURN_BLACK = 1;
+const int8_t TURN_BLACK = -1;
 const int8_t PIP_OUT = -1;
 const int8_t PIP_BAR_WHITE = 0;
 const int8_t PIP_BAR_BLACK = 25;
@@ -32,17 +33,61 @@ public:
     std::sort(pipBlack,pipBlack+3);
   }
 
+    void printChecker(int pipcount, int pos, const char* empty="   ") {
+        if (abs(pipcount)>pos) {
+            if (pos==4 && abs(pipcount)>5)
+                printf("%3d",abs(pipcount)); //< put max 5 pips visually, then number
+            else
+                printf("%s",pipcount<0?"  B":"  W");
+        }
+        else
+            printf("%s",empty);
+    }
+
+    std::vector<Game> nextPositions(int dice1, int dice2) {
+        const int8_t* pips = turn==TURN_WHITE ? pipWhite : pipBlack;
+
+        Game res=*this;
+        res.turn =
+
+    }
+
+
   void print() {
     std::vector<int> board(27);
-    for (auto i : pipWhite) ++board[i+1];
-    for (auto i : pipBlack) --board[i+1];
-    for (int j=13;j<24;++j) {
+    for (auto i : pipWhite) ++board[i];
+    for (auto i : pipBlack) --board[i];
+    for (int j=13;j<=24;++j) {
       printf("%3d",j);
-      if (j==18) printf("| ");
+      if (j==18) printf("  |");
     }
     printf("\n");
-//    for (int j=0;j<3;j)
-//      for (int i=13;++i;i<19)
+    for (int j=0;j<5;++j) {
+        for (int i=13;i<=24;++i) {
+            printChecker(board[i],j);
+            if (i==18) printChecker(board[PIP_BAR_BLACK],j,"  |");
+        }
+        printf("\n");
+    }
+
+    for (int i=1;i<=13;++i)
+        printf("---");
+
+    printf("\n");
+    for (int j=4;j>=0;--j) {
+        for (int i=12;i>=1;--i) {
+            printChecker(board[i],j);
+            if (i==7) printChecker(board[PIP_BAR_WHITE],j,"  |");
+        }
+        printf("\n");
+    }
+
+    for (int j=12;j>=1;--j) {
+        printf("%3d",j);
+      if (j==7) printf("  |");
+    }
+    printf("\n");
+
 
   }
 
